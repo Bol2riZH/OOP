@@ -1,5 +1,8 @@
 <?php
-
+require 'vendor/autoload.php';
+use Dotenv\Dotenv;
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
 /**
  * CE FICHIER DOIT ENREGISTRER UN NOUVEAU COMMENTAIRE EST REDIRIGER SUR L'ARTICLE !
  * 
@@ -55,7 +58,7 @@ if (!$author || !$article_id || !$content) {
  * 
  * PS : Ca fait pas genre 3 fois qu'on écrit ces lignes pour se connecter ?! 
  */
-$pdo = new PDO('mysql:host=localhost;dbname=blogpoo;charset=utf8', 'root', '', [
+$pdo = new PDO('mysql:host=localhost;dbname=blogpoo;charset=utf8', 'root', $_ENV['SQLDB'], [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
