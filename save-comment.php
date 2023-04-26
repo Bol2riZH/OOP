@@ -1,8 +1,9 @@
 <?php
-require 'vendor/autoload.php';
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
+require_once 'libraries/database.php';
+require_once 'libraries/utils.php';
+
+// get database
+$pdo = getPDO();
 /**
  * CE FICHIER DOIT ENREGISTRER UN NOUVEAU COMMENTAIRE EST REDIRIGER SUR L'ARTICLE !
  * 
@@ -47,22 +48,6 @@ if (!$author || !$article_id || !$content) {
     die("Votre formulaire a été mal rempli !");
 }
 
-/**
- * 2. Vérification que l'id de l'article pointe bien vers un article qui existe
- * Ca nécessite une connexion à la base de données puis une requête qui va aller chercher l'article en question
- * Si rien ne revient, la personne se fout de nous.
- * 
- * Attention, on précise ici deux options :
- * - Le mode d'erreur : le mode exception permet à PDO de nous prévenir violament quand on fait une connerie ;-)
- * - Le mode d'exploitation : FETCH_ASSOC veut dire qu'on exploitera les données sous la forme de tableaux associatifs
- * 
- * PS : Ca fait pas genre 3 fois qu'on écrit ces lignes pour se connecter ?! 
- */
-$pdo = new PDO('mysql:host=localhost;dbname=blogpoo;charset=utf8', 'root', $_ENV['SQLDB'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-]);
-
 $query = $pdo->prepare('SELECT * FROM articles WHERE id = :article_id');
 $query->execute(['article_id' => $article_id]);
 
@@ -75,6 +60,4 @@ if ($query->rowCount() === 0) {
 $query = $pdo->prepare('INSERT INTO comments SET author = :author, content = :content, article_id = :article_id, created_at = NOW()');
 $query->execute(compact('author', 'content', 'article_id'));
 
-// 4. Redirection vers l'article en question :
-header('Location: article.php?id=' . $article_id);
-exit();
+redirect("article.php?id=' . $article_id");

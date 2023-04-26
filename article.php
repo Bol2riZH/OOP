@@ -1,8 +1,9 @@
 <?php
-require 'vendor/autoload.php';
-use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
+require_once 'libraries/database.php';
+require_once 'libraries/utils.php';
+
+// get database
+$pdo = getPDO();
 /**
  * CE FICHIER DOIT AFFICHER UN ARTICLE ET SES COMMENTAIRES !
  * 
@@ -31,19 +32,6 @@ if (!$article_id) {
 }
 
 /**
- * 2. Connexion à la base de données avec PDO
- * Attention, on précise ici deux options :
- * - Le mode d'erreur : le mode exception permet à PDO de nous prévenir violament quand on fait une connerie ;-)
- * - Le mode d'exploitation : FETCH_ASSOC veut dire qu'on exploitera les données sous la forme de tableaux associatifs
- * 
- * PS : Vous remarquez que ce sont les mêmes lignes que pour l'index.php ?!
- */
-$pdo = new PDO('mysql:host=localhost;dbname=blogpoo;charset=utf8', 'root', $_ENV['SQLDB'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-]);
-
-/**
  * 3. Récupération de l'article en question
  * On va ici utiliser une requête préparée car elle inclue une variable qui provient de l'utilisateur : Ne faites
  * jamais confiance à ce connard d'utilisateur ! :D
@@ -64,12 +52,5 @@ $query = $pdo->prepare("SELECT * FROM comments WHERE article_id = :article_id");
 $query->execute(['article_id' => $article_id]);
 $commentaires = $query->fetchAll();
 
-/**
- * 5. On affiche 
- */
 $pageTitle = $article['title'];
-ob_start();
-require('templates/articles/show.html.php');
-$pageContent = ob_get_clean();
-
-require('templates/layout.html.php');
+render('articles/show', compact('pageTitle','article','commentaires','article_id'));
