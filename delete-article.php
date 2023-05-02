@@ -2,17 +2,21 @@
 require_once 'libraries/database.php';
 require_once 'libraries/utils.php';
 
+require_once 'libraries/models/Article.php';
+require_once 'libraries/models/Comment.php';
+
+$model = new Article();
+
 if (empty($_GET['id']) || !ctype_digit($_GET['id'])) {
     die("Ho ?! Tu n'as pas précisé l'id de l'article !");
 }
 
 $id = $_GET['id'];
 
-$article = findArticle($id);
+$article = $model->find($id);
 if (!$article) {
     die("L'article $id n'existe pas, vous ne pouvez donc pas le supprimer !");
 }
-
-deleteArticle($id);
+$model->delete($id);
 
 redirect("index.php");

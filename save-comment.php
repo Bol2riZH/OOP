@@ -2,6 +2,12 @@
 require_once 'libraries/database.php';
 require_once 'libraries/utils.php';
 
+require_once 'libraries/models/Article.php';
+require_once 'libraries/models/Comment.php';
+
+$articleModel = new Article();
+$commentModel = new Comment();
+
 $author = null;
 if (!empty($_POST['author'])) {
     $author = $_POST['author'];
@@ -21,11 +27,11 @@ if (!$author || !$article_id || !$content) {
     die("Votre formulaire a été mal rempli !");
 }
 
-$article = findArticle($article_id);
+$article = $articleModel->find($article_id);
 if (!$article) {
     die("Ho ! L'article $article_id n'existe pas boloss !");
 }
 
-insertComment($author, $content, $article_id);
+$commentModel->insert($author, $content, $article_id);
 
 redirect("article.php?id=" . $article_id);
