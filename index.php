@@ -1,8 +1,7 @@
 <?php
+require_once 'libraries/autoload.php';
 
 use Controllers\Article;
-
-require_once 'libraries/controllers/Article.php';
 
 $controller = new Article();
 $controller->index();
