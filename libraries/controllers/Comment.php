@@ -2,8 +2,9 @@
 
 namespace Controllers;
 
+use Http;
+
 require_once 'libraries/autoload.php';
-require_once 'libraries/utils.php';
 
 class Comment extends Controller
 {
@@ -39,7 +40,7 @@ class Comment extends Controller
 
         $this->model->insert($author, $content, $article_id);
 
-        redirect("article.php?id=" . $article_id);
+        Http::redirect("article.php?id=" . $article_id);
     }
 
     public function delete()
@@ -58,6 +59,6 @@ class Comment extends Controller
         $article_id = $comment['article_id'];
         $this->model->delete($id);
 
-        redirect("article.php?id=" . $article_id);
+        Http::redirect("article.php?id=" . $article_id);
     }
 }

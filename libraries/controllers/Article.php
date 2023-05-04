@@ -2,8 +2,10 @@
 
 namespace Controllers;
 
+use Renderer;
+use Http;
+
 require_once 'libraries/autoload.php';
-require_once 'libraries/utils.php';
 
 class Article extends Controller
 {
@@ -14,7 +16,7 @@ class Article extends Controller
         $articles = $this->model->findAll("created_at DESC");
 
         $pageTitle = "Accueil";
-        render('articles/index', compact('pageTitle', 'articles'));
+        Renderer::render('articles/index', compact('pageTitle', 'articles'));
     }
 
     public function show()
@@ -35,7 +37,7 @@ class Article extends Controller
         $commentaires = $commentModel->findByArticle($article_id);
 
         $pageTitle = $article['title'];
-        render('articles/show', compact('pageTitle', 'article', 'commentaires', 'article_id'));
+        Renderer::render('articles/show', compact('pageTitle', 'article', 'commentaires', 'article_id'));
     }
 
     public function delete()
@@ -53,6 +55,6 @@ class Article extends Controller
         }
         $this->model->delete($id);
 
-        redirect("index.php");
+        Http::redirect("index.php");
     }
 }

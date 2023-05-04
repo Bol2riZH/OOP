@@ -2,10 +2,8 @@
 
 namespace Models;
 
+use Database;
 use PDO;
-
-require_once 'libraries/utils.php';
-require_once 'libraries/database.php';
 
 abstract class Model
 {
@@ -14,7 +12,7 @@ abstract class Model
 
     public function __construct()
     {
-        $this->pdo = getPDO();
+        $this->pdo = Database::getPDO();
     }
 
     public function findAll(?string $order = ""): array
