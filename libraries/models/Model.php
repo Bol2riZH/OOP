@@ -1,5 +1,12 @@
 <?php
 
+namespace Models;
+
+use PDO;
+
+require_once 'libraries/utils.php';
+require_once 'libraries/database.php';
+
 abstract class Model
 {
     protected PDO $pdo;
